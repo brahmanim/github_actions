@@ -116,6 +116,10 @@ class ListChangedTargets:
                 _add_changed_target(whc.collection_name, target, "targets")
             for role in whc.roles():
                 _add_changed_target(whc.collection_name, role, "roles")
+            # indirect node count targets
+            if whc.extensions_audit_event_query():
+                for collection in collections:
+                    collection.add_indirect_node_count_targets_to_plan()
 
         print("----------- Test plan      -----------")
         for collection in collections:
