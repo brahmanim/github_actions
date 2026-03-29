@@ -76,6 +76,26 @@ _Example_:
 
 For any change on `plugins/lookup/random.py`, this action will produce `lookup_random` and `test_random` as impacted targets.
 
+## Relationship between extensions and targets
+
+This action reads elements to test from `extensions` directory and corresponding tests from `tests/integration/targets` directory. Here after more details on the relationship between extensions and integration tests targets:
+
+- `audit`, the test target name should have prefix `node_query_` or defines the `indirect_node_count` line into the `aliases` file, when `event_query.yml` file changed.
+
+_Example_:
+
+```
+    |___extensions/audit/event_query.yml
+    |___tests
+        |___integration
+            |___targets
+                |___node_query_database_cluster
+                |___query_instance_ec2
+                    |___aliases (contains this line indirect_node_count)
+```
+
+For any change on `extensions/audit/event_query.yml` file, this action will produce `node_query_database_cluster` and `query_instance_ec2` as impacted targets.
+
 ## Debugging
 
 - Set the label `test-all-the-targets` on the pull request to run the full test suite instead of the impacted changes.
