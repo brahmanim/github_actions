@@ -435,9 +435,7 @@ class Collection:
             if t.is_alias_of(target_name) and self.is_candidate_target(t):
                 self._my_test_plan.append(t)
 
-    def add_targets_to_plan_from_aliases_or_prefix_name(
-        self, alias_line="", prefix_name=""
-    ):
+    def add_targets_to_plan_from_aliases_or_prefix_name(self, alias_line="", prefix_name=""):
         """Add targets to the plan from aliases line or prefix name."""
         for t in self._targets():
             if not self.is_candidate_target(t):
@@ -446,12 +444,12 @@ class Collection:
             # The aliases file contains the line `alias_line`
             if t.is_alias_of(alias_line) or t.name.startswith(prefix_name):
                 self._my_test_plan.append(t)
-    
+
     def add_indirect_node_count_targets_to_plan(self):
-        alias_line="indirect_node_count"
-        prefix_name="node_query_"
+        alias_line = "indirect_node_count"
+        prefix_name = "node_query_"
         self.add_targets_to_plan_from_aliases_or_prefix_name(alias_line, prefix_name)
-    
+
     def cover_all(self) -> None:
         """Cover all the targets available."""
         for cover_target in self.targets():
