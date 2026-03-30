@@ -8,6 +8,7 @@ from pathlib import PosixPath
 from typing import Dict
 from typing import List
 from typing import Union
+from typing import cast
 
 from list_changed_common import Collection
 from list_changed_common import ElGrandeSeparator
@@ -96,12 +97,18 @@ class ListChangedTargets:
                 "targets": [],
                 "roles": [],
             }
-            for path in whc.modules():
-                _add_changed_target(whc.collection_name, path, "modules")
-            for path in whc.inventory():
-                _add_changed_target(whc.collection_name, path, "inventory")
-            for path in whc.connection():
-                _add_changed_target(whc.collection_name, path, "connection")
+            for plugin_type, paths in (
+                ("modules", whc.modules()),
+                ("inventory", whc.inventory()),
+                ("connection", whc.connection()),
+                ("lookup", whc.lookup()),
+                ("targets", whc.targets()),
+                ("roles", whc.roles()),
+            ):
+                for path in paths:
+                    _add_changed_target(
+                        whc.collection_name, cast(Union[PosixPath, str], path), plugin_type
+                    )
             for path, pymod in whc.module_utils():
                 _add_changed_target(whc.collection_name, path, "module_utils")
                 for collection in collections:
@@ -110,12 +117,10 @@ class ListChangedTargets:
                 _add_changed_target(whc.collection_name, path, "plugin_utils")
                 for collection in collections:
                     collection.cover_module_utils(pymod, collections_names)
-            for path in whc.lookup():
-                _add_changed_target(whc.collection_name, path, "lookup")
-            for target in whc.targets():
-                _add_changed_target(whc.collection_name, target, "targets")
-            for role in whc.roles():
-                _add_changed_target(whc.collection_name, role, "roles")
+            # indirect node count targets
+            if whc.extensions_audit_event_query():
+                for collection in collections:
+                    collection.add_indirect_node_count_targets_to_plan()
 
         print("----------- Test plan      -----------")
         for collection in collections:

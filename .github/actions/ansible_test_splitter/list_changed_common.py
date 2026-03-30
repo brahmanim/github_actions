@@ -272,6 +272,17 @@ class WhatHaveChanged:
         """
         yield from self._util_matches("plugins/plugin_utils/", "plugin_utils")
 
+    def extensions_audit_event_query(self) -> bool:
+        """Test if the extensions/audit/event_query.yml file has been updated.
+
+        :returns: whether the extensions/audit/event_query.yml file has been updated or not
+        """
+        event_query_files = (
+            "extensions/audit/event_query.yml",
+            "extensions/audit/event_query.yaml",
+        )
+        return any(str(d) in event_query_files for d in self.changed_files())
+
 
 class Target:
     """A class to store information about a specific target."""
@@ -426,6 +437,28 @@ class Collection:
         for t in self.targets():
             if t.is_alias_of(target_name) and self.is_candidate_target(t):
                 self._my_test_plan.append(t)
+
+    def add_targets_to_plan_from_aliases_or_prefix_name(
+        self, alias_line: str = "", prefix_name: str = ""
+    ) -> None:
+        """Add targets to the plan from aliases line or prefix name.
+
+        :param alias_line: target aliases file line
+        :param prefix_name: target prefix name
+        """
+        for t in self.targets():
+            if not self.is_candidate_target(t):
+                continue
+            # Add the target to the plan if either the name starts with `prefix_name` or
+            # The aliases file contains the line `alias_line`
+            if t.is_alias_of(alias_line) or t.name.startswith(prefix_name):
+                self._my_test_plan.append(t)
+
+    def add_indirect_node_count_targets_to_plan(self) -> None:
+        """Add indirect node count targets to the plan."""
+        alias_line = "indirect_node_count"
+        prefix_name = "node_query_"
+        self.add_targets_to_plan_from_aliases_or_prefix_name(alias_line, prefix_name)
 
     def cover_all(self) -> None:
         """Cover all the targets available."""
