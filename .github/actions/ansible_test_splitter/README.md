@@ -78,9 +78,9 @@ For any change on `plugins/lookup/random.py`, this action will produce `lookup_r
 
 ## Relationship between extensions and targets
 
-This action reads elements to test from `extensions` directory and corresponding tests from `tests/integration/targets` directory. Here after more details on the relationship between extensions and integration tests targets:
+This action reads elements to test from the `extensions` directory and corresponding tests from the `tests/integration/targets` directory. Here are more details on the relationship between extensions and integration tests targets:
 
-- `audit`, the test target name should have prefix `node_query_` or defines the `indirect_node_count` line into the `aliases` file, when `event_query.yml` file changed.
+- `audit`, the test target name should have a prefix `node_query_` or defines the `indirect_node_count` line in the `aliases` file, when the `event_query.yml` file changed.
 
 _Example_:
 
