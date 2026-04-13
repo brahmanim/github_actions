@@ -439,7 +439,7 @@ class Collection:
                 self._my_test_plan.append(t)
 
     def add_targets_to_plan_from_aliases_or_prefix_name(
-        self, alias_line: str = "", prefix_name: str = ""
+        self, alias_line: Optional[str] = None, prefix_name: Optional[str] = None
     ) -> None:
         """Add targets to the plan from aliases line or prefix name.
 
@@ -451,7 +451,9 @@ class Collection:
                 continue
             # Add the target to the plan if either the name starts with `prefix_name` or
             # The aliases file contains the line `alias_line`
-            if t.is_alias_of(alias_line) or t.name.startswith(prefix_name):
+            if (alias_line and t.is_alias_of(alias_line)) or (
+                prefix_name and t.name.startswith(prefix_name)
+            ):
                 self._my_test_plan.append(t)
 
     def add_indirect_node_count_targets_to_plan(self) -> None:

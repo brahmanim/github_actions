@@ -120,7 +120,9 @@ class ListChangedTargets:
             # indirect node count targets
             if whc.extensions_audit_event_query():
                 for collection in collections:
-                    collection.add_indirect_node_count_targets_to_plan()
+                    # Add indirect node count targets only to the updated collection
+                    if collection.collection_name == whc.collection_name:
+                        collection.add_indirect_node_count_targets_to_plan()
 
         print("----------- Test plan      -----------")
         for collection in collections:
